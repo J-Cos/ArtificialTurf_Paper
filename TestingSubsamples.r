@@ -8,8 +8,8 @@
         require(landscapemetrics)
         require(tidyverse)
     #load project functions
-        function_files<-list.files("Functions")
-        sapply(file.path("Functions",function_files),source)
+        function_files<-list.files(file.path("Code","Functions"))
+        sapply(file.path("Code","Functions",function_files),source)
 
 #2. Load Data
     # Importing satellite data #
@@ -37,10 +37,8 @@
         #indexstack19<- spectralIndices(pleiades2019, red = "clipped2019.3", green = "clipped2019.2", blue = "clipped2019.1", nir = "clipped2019.4")
 
 #3. Run Random Forests
-    classes<-factor(c(1,2))
-
-    Vision_rf<-RunRandomForestClassification(pleiades=vision, tp=tp, vp=vp, classes=classes)
-    Planet_rf<-RunRandomForestClassification(pleiades=planet, tp=tp, vp=vp, classes=classes)
+    Vision_rf<-RunRandomForestClassification(data=vision, tp=tp, vp=vp)
+    Planet_rf<-RunRandomForestClassification(data=planet, tp=tp, vp=vp)
 
 #4. Misc
     #Comparing classified maps and extracting land cover statistics # 
