@@ -13,8 +13,11 @@
 
 #2. Load Data
     # Importing satellite data #
-        planet <- brick(file.path("Data", "Planet", "20220807_104951_87_241_Clip.tif"))
-        vision <- brick(file.path("Data", "Vision", "Sample_Vision_1_improved_5Km2.tif"))
+    # and add NDVI band (planet bands: 1 - red; 2 - green; 3 - blue; 4 - nir); (vision bands: )
+        planet <- brick(file.path("Data", "Planet", "20220807_104951_87_241_georef_Clip_27700.tif")) %>%
+            AddNdviBand
+        vision <- brick(file.path("Data", "Vision", "Sample_Vision_1_improved_5Km2.tif")) %>%
+            AddNdviBand
     
         png(file.path("Outputs",paste0("ViewPlanet", Sys.Date(),".png")), height = 8.3, width = 11.7, units = 'in', res = 300)
             plotRGB(planet, r=1, g=2, b=3, stretch="lin")
