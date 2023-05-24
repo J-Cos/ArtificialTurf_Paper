@@ -26,7 +26,7 @@ RunRandomForestClassification<-function(data, tp, vp) {
       
       OutputName<-paste0("SupervisedClassifiction_",deparse(substitute(data)), Sys.Date())
 
-      modsc <- predict(data, mod, filename=file.path("Outputs",OutputName), format="GTiff", datatype="INT1U", type="response", overwrite=TRUE)
+      modsc <- raster::predict(data, mod, filename=file.path("Outputs",OutputName), format="GTiff", datatype="INT1U", type="response", overwrite=TRUE)
       png(file.path("Outputs",paste0("View",OutputName,".png")), height = 8.3, width = 11.7, units = 'in', res = 300)
         terra::plot(modsc, legend=FALSE, axes=FALSE, box=FALSE, col = c("grey", "green"), bty = "n") 
       dev.off()
