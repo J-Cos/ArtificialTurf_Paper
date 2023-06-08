@@ -31,18 +31,7 @@
         TestTrain<-readRDS( file.path("Outputs", "TestTrainPoints.RDS") )
 
         if (ExcludeShadow) {
-            # update to all when 2019 ready as well
-            ExcludeShadowFromTestTrain<-function(TestTrain){
-                for (i in c(1,3) ) { 
-                    keep<-TestTrain[[i]][["pointVals"]]$response != "Shadow"
-
-                    TestTrain[[i]][["pointVals"]]<-TestTrain[[i]][["pointVals"]][keep,] %>% droplevels()
-                    TestTrain[[i]][["NumberCellsPerCategory"]] <-TestTrain[[i]][["NumberCellsPerCategory"]] [ names(TestTrain[[i]][["NumberCellsPerCategory"]]) != "Shadow" ]
-                    TestTrain[[i]][["points"]]<-TestTrain[[i]][["points"]][keep,]
-                }
-                return(TestTrain)
-            }
-
+            # update excluding function to all when 2019 ready as well
             TestTrain<-ExcludeShadowFromTestTrain(TestTrain)
             ShadowId<-"NoShadow_"
         } else {ShadowId<-NULL}
