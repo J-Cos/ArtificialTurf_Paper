@@ -1,5 +1,5 @@
  #direct dependencies
-  #terra
+  #raster
   #RStoolbox
 
 
@@ -11,12 +11,12 @@ AddAllAvailableIndices<-function(raster) {
                                             blue = "clipped2015_1", 
                                             nir = "clipped2015_4", 
                                             scaleFactor=10000
-                                            ) %>%
-                  terra::rast()
+                                            )
 
     print("combining new indices with existing raster layers")
-    raster <-terra::rast(raster)
+    CompletedRaster <- raster::stack(raster, AllIndices)
 
-    CompletedRaster<-c(raster, AllIndices)
     return(CompletedRaster)
 }
+
+

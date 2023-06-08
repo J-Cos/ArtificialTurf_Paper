@@ -12,14 +12,13 @@ RunIndependentValidation<-function(data, vp) {
   # Running independent validation # 
     #extract our assigned classifications of the validation points
       print("Getting validation points")
-      validationpts<-GetClassPoints(data= data, polygons=vp, MaxPointsPerPolygon=10, StratifyingCellSize=0.1)
-      obs<-validationpts[["points"]]$class %>% as.factor()
+      obs<-vp[["points"]]$class
 
     #extract the predicted values of the same points
       print("Quantifying predictive accuracy")
-      pred <- raster::extract(modsc, validationpts[["points"]], cellnumbers = TRUE)
+      pred <- raster::extract(data, vp[["points"]], cellnumbers = TRUE)
       preds<-pred[,"layer"] %>% as.factor()
-      levels(preds) <- c("green", "manmade", "turf", "water")
+      levels(preds) <- c("Green", "Artifical", "Turf", "Water", "Shadow")
 
       confMat<-caret::confusionMatrix(obs, reference = preds) 
 

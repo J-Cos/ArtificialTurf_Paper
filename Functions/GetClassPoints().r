@@ -4,18 +4,25 @@
   #sp
   #raster
   #terra
-
-GetClassPoints<-function(data, polygons, MaxPointsPerPolygon=10, StratifyingCellSize=0.1){
+GetClassPoints<-function(data, polygons, MaxPointsPerPolygonClass=c("Other"=10), StratifyingCellSize=0.1){
 
                 #get stratiefied poitns from polygons
                 print("Getting stratified points")
                   pts_list<-list()
                   for (i in 1:length(polygons)){
-                    pts <- try(sp::spsample(polygons[i,], type = "stratified", cellsize=StratifyingCellSize))
-                    if(class(pts)=="try-error") {return(print("StratifyingCellSize is too large for smallest polygon - there is some randomness in this process"))}
-                    pts<-sample(pts,MaxPointsPerPolygon, replace=TRUE)
-                    pts$class <- rep(polygons[i,]$class, length(pts))
-                    pts_list<-c(pts_list, pts)
+                    #get max points per polygon for this class of polygon
+                      if ( polygons[i,]$class %in% names(MaxPointsPerPolygonClass) ) {
+                        MaxPointsPerPolygon<-MaxPointsPerPolygonClass[as.character(polygons[i,]$class)]
+                      } else {
+                        MaxPointsPerPolygon<-MaxPointsPerPolygonClass["Other"]
+                      }
+                    # sample points
+                      pts <- try(sp::spsample(polygons[i,], type = "stratified", cellsize=StratifyingCellSize))
+                      if(class(pts)=="try-error") {return(print("StratifyingCellSize is too large for smallest polygon - there is some randomness in this process"))}
+                      pts<-sample(pts,MaxPointsPerPolygon, replace=TRUE)
+                      pts$class <- rep(polygons[i,]$class, length(pts))
+                      pts_list<-c(pts_list, pts)
+                    print(paste0("Polygon ", i , " (", polygons[i,]$class, ") complete"))
                   }
                   allpts <- do.call("rbind", pts_list)
 
