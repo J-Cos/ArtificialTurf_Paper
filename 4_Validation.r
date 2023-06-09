@@ -36,7 +36,7 @@
 
     # Importing satellite data #
         sc15<-raster::brick(file.path("Outputs", paste0(ShadowId, "sc15.tif")))
-        sc19<-raster::brick(file.path("Outputs", "sc19.tif"))
+        sc19<-raster::brick(file.path("Outputs", paste0(ShadowId, "sc19.tif")))
 
 #3 
     cm15<-RunIndependentValidation(data= sc15, vp=TestTrain[["test15"]])

@@ -17,13 +17,11 @@
         function_files<-list.files(file.path("Code","Functions"))
         sapply(file.path("Code","Functions",function_files),source)
 
-# Parameters
-    ExcludeShadow<-TRUE
+    # Parameters
+        ExcludeShadow<-TRUE
 
 #2. Load Data
     # Importing satellite data #
-        #p15<-readRDS(file.path("Outputs", "CompleteRasterStack_2015.RDS") )
-        #p19<-readRDS(file.path("Outputs", "CompleteRasterStack_2019.RDS") )
         p15<-terra::rast(file.path("Outputs", "AllIndices_p15.tif"))
         p19<-terra::rast(file.path("Outputs", "AllIndices_p19.tif"))
 

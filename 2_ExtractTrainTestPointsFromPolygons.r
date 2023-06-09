@@ -20,8 +20,6 @@
 #2. Load Data
 
     # Importing satellite data #
-        #p15<-readRDS(file.path("Outputs", "CompleteRasterStack_2015.RDS") )
-        #p19<-readRDS(file.path("Outputs", "CompleteRasterStack_2019.RDS") )
         p15<-raster::brick(file.path("Outputs", "AllIndices_p15.tif"))
         p19<-raster::brick(file.path("Outputs", "AllIndices_p19.tif"))
 
