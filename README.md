@@ -10,7 +10,19 @@ Create a project directory with the following subdirectories
 - Outputs (into which intermediate and final outputs will be written)
 - Figures (into which heuristic visualisations and paper figures will be written)
 
-### Step 2 - Run Code
+### Step2 - Install dependencies (R packages)
+- tidyverse
+
+- raster
+- terra
+- RStoolbox
+- rgdal
+- sp
+
+- randomForest
+- caret
+
+### Step 3 - Run Code
 - Run the code scripts in the order they are numbered, each relies on outputs from those before.
 - No paths need to be changed if the directory structure above is implemented as the code uses only relative paths.
 
