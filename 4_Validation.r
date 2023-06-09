@@ -1,13 +1,9 @@
 #1: Sample testing
     #packages
-        library(sp)
         library(terra)
         library(raster)
-        library(rgdal)
-        library(randomForest)
         library(caret)
         library(tidyverse)
-        library(RStoolbox)
 
     #load project functions
         function_files<-list.files(file.path("Code","Functions"))

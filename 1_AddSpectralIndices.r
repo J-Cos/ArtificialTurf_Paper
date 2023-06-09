@@ -5,6 +5,7 @@
 #1: Dependencies
     #packages
         library(raster)
+        library(terra)
         library(tidyverse)
         library(RStoolbox)
 
