@@ -12,5 +12,5 @@ Create a project directory with the following subdirectories
 
 ### Step 2 - Run Code
 - Run the code scripts in the order they are numbered, each relies on outputs from those before.
-- no paths need to be changed if the directory structure above is implemented as the code uses only relative paths.
+- No paths need to be changed if the directory structure above is implemented as the code uses only relative paths.
 
