@@ -14,7 +14,7 @@
         sapply(file.path("Code","Functions",function_files),source)
 
     # Parameters
-        ExcludeShadow<-FALSE
+        ExcludeShadow<-TRUE
         
 #2. Load Data
 
