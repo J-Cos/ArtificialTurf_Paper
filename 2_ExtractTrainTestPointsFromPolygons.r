@@ -14,15 +14,22 @@
         function_files<-list.files(file.path("Code","Functions"))
         sapply(file.path("Code","Functions",function_files),source)
 
+    # Parameters
+        BandNames<-c("clipped2015_1", "clipped2015_2", "clipped2015_3", "clipped2015_4", "CTVI" ,
+            "DVI", "EVI", "GEMI", "GNDVI","KNDVI", "MSAVI", "MSAVI2", "NDVI", 
+            "NDWI" ,"NRVI", "RVI", "SAVI", "SR", "TTVI", "TVI",  "WDVI")
+        IndicesToUse<-c(1,2,3,4,13,14)
+
 #2. Load Data
 
     # Importing satellite data #
-        p15<-raster::brick(file.path("Outputs", "AllIndices_p15.tif"))
+        p15<-raster::brick(file.path("Outputs", "AllIndices_p15.tif")) %>%
+            raster::subset(., IndicesToUse)
         p19<-raster::brick(file.path("Outputs", "AllIndices_p19.tif"))
 
     # Load training and validation polygons #
     # And setting coordinate reference system to match imagery
-        tv_polygons15<-LoadTestTrainData(TestTrain="reference_data_2015_improved", pleiades=p15)
+        tv_polygons15<-LoadTestTrainData(TestTrain="reference_data_2015_improved_water_poly_split", pleiades=p15)
 
     # adjust mislabelled classes to match ids (there are currently two ariitifical classes with typo names "man" and "man-made")
         NewClassNames<-tv_polygons15$id %>%
