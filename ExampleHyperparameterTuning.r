@@ -2,6 +2,9 @@
 
 #set up
     library(randomForest)
+    library(tidyverse)
+    library(ggplot2)
+    
     set.seed(1)
     data(iris)
 
