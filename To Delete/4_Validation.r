@@ -56,7 +56,12 @@
                     legend=TRUE,  col=plotCols,  main=paste0(TrainingClassId,"Supervised Classification"))
         dev.off()
 
-R
+        png(file.path("Figures",paste0("View_", TrainingClassId, "sc19.png")), height = 8.3, width = 11.7, units = 'in', res = 300)
+            terra::rast(sc19) %>% 
+                terra::plot(., 
+                    legend=TRUE,  col=plotCols,  main=paste0(TrainingClassId,"Supervised Classification"))
+        dev.off()
+
     #Save stats outputs
     #Comparing classified maps and extracting land cover statistics # 
         #crossTabulation <- crosstab(Vision_rf[["randomForestPrediction"]], Planet_rf[["randomForestPrediction"]], long = TRUE) # Using cross tabulation # different extents

@@ -18,7 +18,7 @@ RunIndependentValidation<-function(data, vp) {
       print("Quantifying predictive accuracy")
       pred <- raster::extract(data, vp[["points"]], cellnumbers = TRUE)
       preds<-pred[,"layer"] %>% as.factor()
-      levels(preds) <- c("Green", "Artifical", "Turf", "Water", "Shadow")
+      levels(preds) <- c("green", "manmade", "turf", "water", "Shadow")
 
       confMat<-caret::confusionMatrix(obs, reference = preds) 
 

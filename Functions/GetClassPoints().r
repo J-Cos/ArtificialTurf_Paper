@@ -25,10 +25,11 @@ GetClassPoints<-function(data, polygons, MaxPointsPerPolygonClass=c("Other"=10),
                     print(paste0("Polygon ", i , " (", polygons[i,]$class, ") complete"))
                   }
                   allpts <- do.call("rbind", pts_list)
+                  allpts<-terra::vect(allpts)
 
                 #extract values from raster based on raster cell each point falls within
                 print("Extracting values from raster cells")
-                  trainingvals <- raster::extract(data, y=allpts, cellnumbers=TRUE, method="simple")
+                  trainingvals <- terra::extract(data, y=allpts, cellnumbers=TRUE, method="simple")
                   trainingvals <- data.frame(response = allpts$class, trainingvals)
                 
                 # remove raster cells that are selected multiple times

@@ -26,3 +26,46 @@ Create a project directory with the following subdirectories
 - Run the code scripts in the order they are numbered, each relies on outputs from those before.
 - No paths need to be changed if the directory structure above is implemented as the code uses only relative paths.
 
+<<<<<<< Updated upstream
+=======
+-N.B. ensure you start work from this directory - all paths are relative.
+<<<<<<< Updated upstream
+=======
+
+
+# Analysis plan
+Pre-processing 
+
+ 
+
+    Classes 
+
+Two classes:  
+
+1 man made 
+
+2 vegetated 
+
+Should we have a separate class for areas of shadow?  
+
+ 
+
+    Training and test data collection 
+
+Only create training and test data for the areas we want to include in our analysis (based on the Verisk polygon data – gardens, parks… any other classes relevant to our analysis?) 
+
+    Analysis 
+
+ 
+
+Calculate NDVI 
+
+ 
+
+Map accuracy: Visualisation and confusion matrix 
+
+Crop the map using the Verisk data, so that we can better see how well the approach to analysis has worked 
+
+ 
+>>>>>>> Stashed changes
+>>>>>>> Stashed changes

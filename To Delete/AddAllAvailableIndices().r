@@ -1,20 +1,23 @@
  #direct dependencies
+  #terra
   #raster
   #RStoolbox
 
 
 AddAllAvailableIndices<-function(raster) {
     print("Calculating indices")
+    names<-names(raster)
     AllIndices<-RStoolbox::spectralIndices( raster, 
-                                            red = "clipped2015_3", 
-                                            green = "clipped2015_2", 
-                                            blue = "clipped2015_1", 
-                                            nir = "clipped2015_4", 
+                                            red = names[3],
+                                            green = names[2],
+                                            blue = names[1],
+                                            nir = names[4],
                                             scaleFactor=10000
                                             )
 
     print("combining new indices with existing raster layers")
-    CompletedRaster <- raster::stack(raster, AllIndices)
+    AllIndices_terra<- terra::rast(AllIndices)
+    CompletedRaster <- c(raster, AllIndices_terra)
 
     return(CompletedRaster)
 }
