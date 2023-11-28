@@ -39,7 +39,10 @@
                     axis.title.y = element_blank() )
                     
 # 4) print plot
-    tiff(file.path("Figures","Fig1.tiff"), height = 8, width = 8, units = 'in', res = 600)
+
+    scalingFactor<-(6.85/8) # to fit 174mm page width of J. Urban Ecosystems
+
+    tiff(file.path("Figures","Fig1.tiff"), height = 8, width = 8, units = 'in', res = 600* scalingFactor)
             cowplot::ggdraw() +
                 cowplot::draw_plot(cowplot::as_grob(pimage),  x=0, y=0, width=1, height=1)+
                 cowplot::draw_plot(LocationMap, x=0.8, y=0.8, width=0.2, height=0.2)

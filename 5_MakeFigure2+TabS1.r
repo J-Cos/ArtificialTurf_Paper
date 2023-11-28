@@ -104,8 +104,9 @@
         plotseg_l<-makeZoomedPlotList(sc15seg)
 
 # 5. save compound figure
+    scalingFactor<-(6.85/18) # to fit 174mm page width of J. Urban Ecosystems
 
-    tiff(file.path("Figures",paste0("Fig2.tiff")), height = 16, width = 18, units="in", res=600)
+    tiff(file.path("Figures",paste0("Fig2.tiff")), height = 16, width = 18, units="in", res=600*scalingFactor)
         cowplot::ggdraw() +
             cowplot::draw_plot(plot, x=0, y=0.5, width=0.45, height=0.5)+
             cowplot::draw_plot(ggpubr::ggarrange(plotlist=plot_l, nrow=2, ncol=2), x=0.45, y=0.5, width=0.45, height=0.5)+
