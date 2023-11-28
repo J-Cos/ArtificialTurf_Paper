@@ -1,7 +1,8 @@
  
-AddNdviBand<-function(raster) {
-    NDVI <- (raster[[4]] - raster[[1]]) / (raster[[4]] + raster[[1]])
+AddNdviBand<-function(raster, redBand, nirBand) {
+    numBands<-dim(raster)[3]
+    NDVI <- (raster[[nirBand]] - raster[[redBand]]) / (raster[[nirBand]] + raster[[redBand]])
     raster<-c(raster, NDVI)
-    names(raster)[5]<-c("NDVI")
+    names(raster)[numBands+1]<-c("NDVI")
     return(raster)
 }

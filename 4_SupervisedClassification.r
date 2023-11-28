@@ -38,8 +38,8 @@
 #2. Load Data
     # Load training and validation points #
         TestTrain<-readRDS( file.path("Outputs", "TestTrainPoints.RDS") )
-        p15 <-  terra::rast(file.path("Outputs", "AllIndices_p15.tif"))
-        p15seg<- terra::rast("Outputs/SegmentSummaryRaster_p15.tif")
+        p <-  terra::rast(file.path("Outputs", "AllBands.tif"))
+        pseg<- terra::rast("Outputs/SegmentSummaryRaster.tif")
 
 
         if (ExcludeShadow & !ExcludeWater) {
@@ -68,36 +68,37 @@
                     model_tuned <- randomForest::tuneRF(
                         x=select(TestTrain[["train15"]][["pointVals"]], !c(response, ID)), #define predictor variables
                         y=TestTrain[["train15"]][["pointVals"]]$response, #define response variable
-                        ntreeTry=1001,
+                        ntreeTry=3001,
                         mtryStart=2, 
                         stepFactor=1.5,
                         improve=0.001,
                         trace=TRUE #don't show real-time progress
                     )
                 #optimum mtry 
-                    #2
+                    #5
                 #error rates stabilise by 500 trees - visible with plot(mod15)
             #segmentation
                 #tune rf
                     model_tuned <- randomForest::tuneRF(
                         x=select(TestTrain[["train15seg"]][["pointVals"]], !c(response, ID)), #define predictor variables
                         y=TestTrain[["train15seg"]][["pointVals"]]$response, #define response variable
-                        ntreeTry=1001,
+                        ntreeTry=3001,
                         mtryStart=2, 
                         stepFactor=1.5,
                         improve=0.001,
                         trace=TRUE #don't show real-time progress
                     )
-                #optimum mtry =2 for seg
+                #optimum mtry =6 for seg
                 #error rates stabilise by 500 trees - visible with plot(mod15seg)
         # fit train test rfs
+        set.seed(1) 
             mod15 <- randomForest::randomForest(x=select(TestTrain[["train15"]][["pointVals"]], !c(response, ID)), 
                                                 xtest= select(TestTrain[["test15"]][["pointVals"]], !c(response, ID)) , 
                                                 y=TestTrain[["train15"]][["pointVals"]]$response, 
                                                 ytest= TestTrain[["test15"]][["pointVals"]]$response , 
                                                 na.action=na.omit, 
                                                 ntree=3001, 
-                                                mtry=2, 
+                                                mtry=5, 
                                                 confusion=TRUE)
                 
             mod15seg <- randomForest::randomForest(x=select(TestTrain[["train15seg"]][["pointVals"]], !c(response, ID)), 
@@ -106,7 +107,7 @@
                                                 ytest= TestTrain[["test15seg"]][["pointVals"]]$response , 
                                                 na.action=na.omit, 
                                                 ntree=3001, 
-                                                mtry=2, 
+                                                mtry=6, 
                                                 confusion=TRUE)
 
         #save table 3
@@ -115,30 +116,47 @@
             MakeConfusionTable(mod15seg[["test"]][["confusion"]]) %>%
                 write.csv("Figures/Table3b.csv")    
 
+        #get F1 stats
+            GetF1<-function(mod, var){
+                2/((1/as.numeric(MakeConfusionTable(mod[["test"]][["confusion"]])[var,7])) + (1/ as.numeric(MakeConfusionTable(mod[["test"]][["confusion"]])[7,var])))
+            }
 
-    #make land cover map
+            #green
+            GetF1(mod15, 1)
+            GetF1(mod15seg, 1)
+            #urban
+            GetF1(mod15, 2)
+            GetF1(mod15seg, 2)
+            #turf
+            GetF1(mod15, 3)
+            GetF1(mod15seg, 3)
+            #water
+            GetF1(mod15, 4)
+            GetF1(mod15seg, 4)
+
+
+# 4. make land cover maps
     set.seed(1) 
+    mod15 <- randomForest::randomForest(response ~ ., data=select(TestTrain[["train15"]][["pointVals"]], !ID), na.action=na.omit, ntree=3001, mtry=5, confusion=TRUE)
+    sc15 <- terra::predict(object=p, 
+                            model=mod15, 
+                            type="response",
+                            filename=file.path("Outputs", "landcover_15.tif"), 
+                            format="GTiff", 
+                            datatype="INT1U",
+                            overwrite=TRUE)
+    set.seed(1) 
+    mod15seg <- randomForest::randomForest(response ~ ., data=select(TestTrain[["train15seg"]][["pointVals"]], !ID), na.action=na.omit, ntree=3001, mtry=6, confusion=TRUE)
+    sc15seg <- terra::predict(object=pseg, 
+                            model=mod15seg, 
+                            type="response",
+                            filename=file.path("Outputs", "landcover_15seg.tif"), 
+                            format="GTiff", 
+                            datatype="INT1U",
+                            overwrite=TRUE)
 
-            mod15 <- randomForest::randomForest(response ~ ., data=select(TestTrain[["train15"]][["pointVals"]], !ID), na.action=na.omit, ntree=3001, mtry=2, confusion=TRUE)
-            sc15 <- terra::predict(object=p15, 
-                                    model=mod15, 
-                                    type="response",
-                                    filename=file.path("Outputs", "landcover_15.tif"), 
-                                    format="GTiff", 
-                                    datatype="INT1U",
-                                    overwrite=TRUE)
 
-            mod15seg <- randomForest::randomForest(response ~ ., data=select(TestTrain[["train15seg"]][["pointVals"]], !ID), na.action=na.omit, ntree=3001, mtry=2, confusion=TRUE)
-            sc15seg <- terra::predict(object=p15seg, 
-                                    model=mod15seg, 
-                                    type="response",
-                                    filename=file.path("Outputs", "landcover_15seg.tif"), 
-                                    format="GTiff", 
-                                    datatype="INT1U",
-                                    overwrite=TRUE)
-
-
-#4. save outputs
+# 5. save outputs
     #saving random forest models - (classification rasters written to file by functions)
         saveRDS(mod15, file.path("Outputs", paste0(TrainingClassId,"RandomForestModel_15")))
         saveRDS(mod15seg, file.path("Outputs", paste0(TrainingClassId,"RandomForestModel_15seg")))

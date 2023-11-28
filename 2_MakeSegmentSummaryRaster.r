@@ -7,23 +7,23 @@ terraOptions(verbose=TRUE, memmax=10)
     numCores<-4
     seg<-terra::rast(file.path("Data", "Stevenage", "clip2015_segmented_min5_0_01.tif"))
     pols<-terra::vect(file.path("Outputs", "SegmentationPolygons"))
-    p15<-terra::rast(file.path("Outputs", "AllIndices_p15.tif"))
+    p<-terra::rast(file.path("Outputs", "AllBands.tif"))
 
 #functions
 GetCPUTimeToCompleteExtraction<-function(fun) {
-    print(paste0("Expectected time to complete: ",round(system.time(terra::extract(p15, pols_l[[1]], fun=fun))[3]*length(pols_l)/3600, digits=1), " hours"))
+    print(paste0("Expectected time to complete: ",round(system.time(terra::extract(p, pols_l[[1]], fun=fun))[3]*length(pols_l)/3600, digits=1), " hours"))
 }
 ExtractStat<-function(polsChunk, stat){ 
-    df<-terra::extract(p15, polsChunk, fun=stat)
+    df<-terra::extract(p, polsChunk, fun=stat)
     print("-")
     return(df)  
 }
 #verbose version
-        ExtractStat <- function(NumberOfChunk, poly_list, stat) {
-        df<-terra::extract(p15, poly_list[[NumberOfChunk]], fun=stat)
+    ExtractStat <- function(NumberOfChunk, poly_list, stat) {
+        df<-terra::extract(p, poly_list[[NumberOfChunk]], fun=stat)
         print(NumberOfChunk)
         return(df)
-        }
+    }
 #####################
 
 # run parallel extract
@@ -33,7 +33,7 @@ ExtractStat<-function(polsChunk, stat){
     GetCPUTimeToCompleteExtraction(sd)
 
     print(paste0("Starting parallel mean extraction from ", length(pols_l), " polygons with ", as.integer(numCores), " cores"))
-    means_l<-parallel::mclapply(pols_l, mc.cores=numCores, ExtractStat, stat=mean)
+    means_l<-parallel::mclapply(names(pols_l), mc.cores=numCores, ExtractStat,  poly_list=pols_l, stat=mean)
     saveRDS(means_l, "Outputs/SegmentedPolygonMeans.RDS")
 
     print(paste0("Starting parallel SD extraction from ", length(pols_l), " polygons with ", as.integer(numCores), " cores"))
@@ -70,7 +70,7 @@ ExtractStat<-function(polsChunk, stat){
     rasts<-list.files("Outputs/IndividualSegementationSummaryRasters", full.names=TRUE)
     SegmentSummaryRaster_l<-lapply(rasts, terra::rast)
     SegmentSummaryRaster<-terra::rast(SegmentSummaryRaster_l)
-    terra::writeRaster(SegmentSummaryRaster, file.path("Outputs", "SegmentSummaryRaster_p15.tif"), overwrite=TRUE)
+    terra::writeRaster(SegmentSummaryRaster, file.path("Outputs", "SegmentSummaryRaster.tif"), overwrite=TRUE)
 
 ############################################
 #END OF CODE ###

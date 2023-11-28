@@ -26,8 +26,20 @@
         sc15seg<-terra::rast(file.path("Outputs", "landcover_15seg.tif")) #%>%
         levels(sc15seg)<-df
 
+# 3. Make frequency table (Table S1)
+    f15<-freq(sc15)
+    f15$prop<-signif(f15$count/sum(f15$count),2)*100
+    f15seg<-freq(sc15seg)
+    f15seg$prop<-signif(f15seg$count/sum(f15seg$count),2)*100
 
-# 3. Make plots with some zoomed areas
+    tab<-cbind(f15, f15seg$prop) %>%
+        select(-layer, -count) 
+    
+    names(tab)<-c("Class", "Percentage of area (pixel-based)", "Percentage of area (object-based)")
+
+    write.csv(tab, "Figures/SupplementaryTable1.csv")
+
+# 4. Make plots with some zoomed areas
     #get zoomed areas
         MakePolygon<-function(e){
             v <- as.polygons(crop(sc15, e), extent=TRUE)
@@ -48,27 +60,25 @@
             MakePolygon(ZoomedExtents[[4]])
         )
 
-        polys<-cbind(polys, data.frame(polyNames=1:length(polys)))
-
-
     # make main plot
-        makeMainPlot<-function(sc){
+        makeMainPlot<-function(sc, ZoomNames=1:4){
             plot<-ggplot() +
                 geom_spatraster(
                     data = sc,alpha = 1, aes(fill=cat), na.rm=TRUE
                 )+ 
                 scale_fill_manual(values = plotCols, na.translate=FALSE)+
                 geom_spatvector(data=polys, fill=NA, color="black")+
-                geom_spatvector_text(data=polys, aes(label = polyNames), fontface = "bold", color = "black")+
+                geom_spatvector_text(data=polys, aes(label = ZoomNames), size=12, fontface = "bold", color = "black")+
                 theme_classic()+
                 theme(  axis.title = element_blank(),
+                        axis.text=element_text(size=16), 
                         legend.title= element_blank(),
-                        legend.text=element_text(size=15))
+                        legend.text=element_text(size=16))
             return(plot)
         }
 
-        plot<-makeMainPlot(sc15)+theme(legend.position="none")
-        plotseg<-makeMainPlot(sc15seg)+theme(legend.position="none")
+        plot<-makeMainPlot(sc15, ZoomNames=c("B", "C", "D", "E"))+theme(legend.position="none")
+        plotseg<-makeMainPlot(sc15seg, ZoomNames=c("G", "H", "I", "J"))+theme(legend.position="none")
 
         legend<-ggpubr::as_ggplot(ggpubr::get_legend(makeMainPlot(sc15)))
 
@@ -82,7 +92,9 @@
                             scale_fill_manual(values = plotCols, na.translate=FALSE)+
                             theme_classic()+
                             theme(  axis.title = element_blank(),
-                                    axis.text=element_text(size=6) )
+                                    axis.ticks = element_blank(),
+                                    axis.text=element_blank(),
+                                    axis.line=element_blank())
             }
             return(plot_l)
         }
@@ -91,14 +103,14 @@
         plot_l<-makeZoomedPlotList(sc15)
         plotseg_l<-makeZoomedPlotList(sc15seg)
 
-#4. save compound figure
+# 5. save compound figure
 
-    png(file.path("Figures",paste0("Figure2.png")), height = 16.6, width = 16, units="in", res=600)
+    tiff(file.path("Figures",paste0("Fig2.tiff")), height = 16, width = 18, units="in", res=600)
         cowplot::ggdraw() +
             cowplot::draw_plot(plot, x=0, y=0.5, width=0.45, height=0.5)+
             cowplot::draw_plot(ggpubr::ggarrange(plotlist=plot_l, nrow=2, ncol=2), x=0.45, y=0.5, width=0.45, height=0.5)+
-            cowplot::draw_plot(plot, x=0, y=0, width=0.45, height=0.5)+
-            cowplot::draw_plot(ggpubr::ggarrange(plotlist=plot_l, nrow=2, ncol=2), x=0.45, y=0, width=0.45, height=0.5)+
+            cowplot::draw_plot(plotseg, x=0, y=0, width=0.45, height=0.5)+
+            cowplot::draw_plot(ggpubr::ggarrange(plotlist=plotseg_l, nrow=2, ncol=2), x=0.45, y=0, width=0.45, height=0.5)+
             cowplot::draw_plot(legend, x=0.9, y=0, width=0.1, height=1)+
             cowplot::draw_plot_label(   label = c("A", "B","C","D","E","F", "G", "H", "I", "J"), 
                         size = 15, 

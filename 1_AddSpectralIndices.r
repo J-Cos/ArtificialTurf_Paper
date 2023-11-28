@@ -13,11 +13,18 @@
 
 #2. Load, add all spectral indices and plot
     #load 2015 data
-        p15 <- terra::rast(file.path("Data", "Stevenage", "clipped2015.tif")) 
+        p <- terra::rast(file.path("Data", "Stevenage", "clipped2015.tif")) 
 
 # 3) processing
     #add NDVI band used
-        p15<-AddNdviBand(p15)
+        p<-AddNdviBand(p, nirBand=4, redBand=3) %>%   
+            AddNdwiBand(., nirBand=4, greenBand=2)
 
-#3. save output
-    terra::writeRaster(p15, file.path("Outputs", "AllIndices_p15.tif"), overwrite=TRUE)
+#3. plot all bands
+    png(file.path("Figures","AllBands.png"), height = 8.3, width = 15, units = 'in', res = 600)
+        plot(p)
+    dev.off()  
+
+#4. save output
+    terra::writeRaster(p, file.path("Outputs", "AllBands.tif"), overwrite=TRUE)
+
