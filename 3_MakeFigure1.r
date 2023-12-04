@@ -14,12 +14,12 @@
         sapply(file.path("Code","Functions",function_files),source)
 
 #2. Load data
-        s <-  terra::rast(file.path("Outputs", "Stretched_p15.tif"))
+        s <-  terra::rast(file.path("Outputs", "Stretched.tif"))
 
 #3) make maps
     # get pleiades image
         pimage <- ggplot() +
-                        geom_spatraster_rgb( data = s,alpha = 1, r=3, g=2, b=1)+
+                        geom_spatraster_rgb( data = s,alpha = 1, r=1, g=2, b=3)+
                         theme_classic()
 
     # get location map

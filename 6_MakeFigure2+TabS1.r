@@ -21,18 +21,18 @@
 
 
     # Importing satellite data #
-        sc15<-terra::rast(file.path("Outputs", "landcover_15.tif"))
-        levels(sc15)<-df
-        sc15seg<-terra::rast(file.path("Outputs", "landcover_15seg.tif")) #%>%
-        levels(sc15seg)<-df
+        sc19<-terra::rast(file.path("Outputs", "landcover_19.tif"))
+        levels(sc19)<-df
+        sc19seg<-terra::rast(file.path("Outputs", "landcover_19seg.tif")) #%>%
+        levels(sc19seg)<-df
 
 # 3. Make frequency table (Table S1)
-    f15<-freq(sc15)
-    f15$prop<-signif(f15$count/sum(f15$count),2)*100
-    f15seg<-freq(sc15seg)
-    f15seg$prop<-signif(f15seg$count/sum(f15seg$count),2)*100
+    f19<-freq(sc19)
+    f19$prop<-signif(f19$count/sum(f19$count),2)*100
+    f19seg<-freq(sc19seg)
+    f19seg$prop<-signif(f19seg$count/sum(f19seg$count),2)*100
 
-    tab<-cbind(f15, f15seg$prop) %>%
+    tab<-cbind(f19, f19seg$prop) %>%
         select(-layer, -count) 
     
     names(tab)<-c("Class", "Percentage of area (pixel-based)", "Percentage of area (object-based)")
@@ -42,7 +42,7 @@
 # 4. Make plots with some zoomed areas
     #get zoomed areas
         MakePolygon<-function(e){
-            v <- as.polygons(crop(sc15, e), extent=TRUE)
+            v <- as.polygons(crop(sc19, e), extent=TRUE)
             return(v)
         }
 
@@ -77,10 +77,10 @@
             return(plot)
         }
 
-        plot<-makeMainPlot(sc15, ZoomNames=c("B", "C", "D", "E"))+theme(legend.position="none")
-        plotseg<-makeMainPlot(sc15seg, ZoomNames=c("G", "H", "I", "J"))+theme(legend.position="none")
+        plot<-makeMainPlot(sc19, ZoomNames=c("B", "C", "D", "E"))+theme(legend.position="none")
+        plotseg<-makeMainPlot(sc19seg, ZoomNames=c("G", "H", "I", "J"))+theme(legend.position="none")
 
-        legend<-ggpubr::as_ggplot(ggpubr::get_legend(makeMainPlot(sc15)))
+        legend<-ggpubr::as_ggplot(ggpubr::get_legend(makeMainPlot(sc19)))
 
     #make zoomed subplots
 
@@ -100,8 +100,8 @@
         }
 
 
-        plot_l<-makeZoomedPlotList(sc15)
-        plotseg_l<-makeZoomedPlotList(sc15seg)
+        plot_l<-makeZoomedPlotList(sc19)
+        plotseg_l<-makeZoomedPlotList(sc19seg)
 
 # 5. save compound figure
     scalingFactor<-(6.85/18) # to fit 174mm page width of J. Urban Ecosystems

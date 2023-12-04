@@ -17,10 +17,10 @@
 
     #saving random forest models - (classification rasters written to file by functions)
         df<-data.frame(val=c(1,2,3,4), cat=c("Vegetation", "Man-made", "Artificial Turf", "Water"))
-        sc15<-terra::rast(file.path("Outputs", "landcover_15.tif"))
-        levels(sc15)<-df
-        sc15seg<-terra::rast(file.path("Outputs", "landcover_15seg.tif")) #%>%
-        levels(sc15seg)<-df
+        sc19<-terra::rast(file.path("Outputs", "landcover_19.tif"))
+        levels(sc19)<-df
+        sc19seg<-terra::rast(file.path("Outputs", "landcover_19seg.tif")) #%>%
+        levels(sc19seg)<-df
 
 
         TrainPolys<-terra::vect(readRDS(file.path("Outputs", "TrainTestPolys.RDS"))[["trainPolys"]])
@@ -68,14 +68,14 @@ MakeTurfClassificationPlot<-function(Turf_df) {
 # 2. make figure and stats
     #pixel based df
         Turf_df<-rbind(
-            mutate(MakeTurfClassificationDf(TrainPolys, sc15), TV="Training turf polygons"),
-            mutate(MakeTurfClassificationDf(TestPolys, sc15), TV="Validation turf polygons")
+            mutate(MakeTurfClassificationDf(TrainPolys, sc19), TV="Training turf polygons"),
+            mutate(MakeTurfClassificationDf(TestPolys, sc19), TV="Validation turf polygons")
         )
 
     #object based df
         Turfseg_df<-rbind(
-            mutate(MakeTurfClassificationDf(TrainPolys, sc15seg), TV="Training turf polygons"),
-            mutate(MakeTurfClassificationDf(TestPolys, sc15seg), TV="Validation turf polygons")
+            mutate(MakeTurfClassificationDf(TrainPolys, sc19seg), TV="Training turf polygons"),
+            mutate(MakeTurfClassificationDf(TestPolys, sc19seg), TV="Validation turf polygons")
         )
     
     #get stats 
@@ -104,7 +104,7 @@ MakeTurfClassificationPlot<-function(Turf_df) {
         cowplot::ggdraw() +
             cowplot::draw_plot(pb_plot, x=0, y=0.5, width=1, height=0.5)+
             cowplot::draw_plot(ob_plot, x=0, y=0, width=1, height=0.5)+
-            cowplot::draw_plot_label(   label = c("A", "B"), size = 15, x = c(  0, 0), y = c(1, 0.5))
+            cowplot::draw_plot_label(   label = c("A", "B"), size = 19, x = c(  0, 0), y = c(1, 0.5))
     dev.off()
 
  

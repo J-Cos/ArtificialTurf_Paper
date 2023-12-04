@@ -18,4 +18,4 @@
 
 #3) make streched pleiades for optimal plotting contrast
         s <- terra::stretch(p, minq=0.02, maxq=.98)
-        terra::writeRaster(s, file.path("Outputs", "Stretched_p15.tif"), overwrite=TRUE)
+        terra::writeRaster(s, file.path("Outputs", "Stretched.tif"), overwrite=TRUE)

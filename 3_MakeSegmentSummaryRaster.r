@@ -5,7 +5,7 @@ terraOptions(verbose=TRUE, memmax=10)
 #load data and parameters
     PolygonChunkSize<-1000
     numCores<-4
-    seg<-terra::rast(file.path("Data", "Stevenage", "clip2015_segmented_min5_0_01.tif"))
+    seg<-terra::rast(file.path("Data", "Stevenage", "clip2019_segmented_min5_0_01.tif"))
     pols<-terra::vect(file.path("Outputs", "SegmentationPolygons"))
     p<-terra::rast(file.path("Outputs", "AllBands.tif"))
 
@@ -29,14 +29,14 @@ ExtractStat<-function(polsChunk, stat){
 # run parallel extract
     pols_l<-base::split(pols, ceiling(seq_along(pols)/PolygonChunkSize))
 
-    GetCPUTimeToCompleteExtraction(mean)
-    GetCPUTimeToCompleteExtraction(sd)
+    #GetCPUTimeToCompleteExtraction(mean)
+    #GetCPUTimeToCompleteExtraction(sd)
 
-    print(paste0("Starting parallel mean extraction from ", length(pols_l), " polygons with ", as.integer(numCores), " cores"))
+    print(paste0("Starting parallel mean extraction from ", length(pols_l), " polygon chunks with ", as.integer(numCores), " cores"))
     means_l<-parallel::mclapply(names(pols_l), mc.cores=numCores, ExtractStat,  poly_list=pols_l, stat=mean)
     saveRDS(means_l, "Outputs/SegmentedPolygonMeans.RDS")
 
-    print(paste0("Starting parallel SD extraction from ", length(pols_l), " polygons with ", as.integer(numCores), " cores"))
+    print(paste0("Starting parallel SD extraction from ", length(pols_l), " polygon chunks with ", as.integer(numCores), " cores"))
     SDs_l<-parallel::mclapply(names(pols_l), mc.cores=numCores, ExtractStat, poly_list=pols_l, stat=sd)
     saveRDS(SDs_l, "Outputs/SegmentedPolygonSDs.RDS")
 

@@ -23,7 +23,7 @@
 
     # Load training and validation polygons #
     # And setting coordinate reference system to match imagery
-        tv_polygons<-LoadTestTrainData(TestTrain="reference_data_2015_improved_water_poly_split", pleiades=p)
+        tv_polygons<-LoadTestTrainData(TestTrain="reference_data_2019_improved_water_poly_split", pleiades=p)
 
     # adjust mislabelled classes to match ids (there are currently two artifical classes with typo names "man" and "man-made")
         NewClassNames<-tv_polygons$id %>%
@@ -41,28 +41,28 @@
 #4. Get points from polygons
     #set seed as random sampling involved
 
-    train15<-GetClassPoints(data= p, 
+    train19<-GetClassPoints(data= p, 
                             polygons=TrainTestPolys[["trainPolys"]], 
                             MaxPointsPerPolygonClass=c("water"=20, "turf"=20, "Other"=20), 
                             StratifyingCellSize=0.1)
-    test15<-GetClassPoints(data= p, 
+    test19<-GetClassPoints(data= p, 
                             polygons=TrainTestPolys[["testPolys"]],
                             MaxPointsPerPolygonClass=c("water"=20, "turf"=20, "Other"=20), 
                             StratifyingCellSize=0.1)
 
-    train15seg<-GetClassPoints(data= pseg, 
+    train19seg<-GetClassPoints(data= pseg, 
                             polygons=TrainTestPolys[["trainPolys"]], 
                             MaxPointsPerPolygonClass=c("water"=20, "turf"=20, "Other"=20), 
                             StratifyingCellSize=0.1)
-    test15seg<-GetClassPoints(data= pseg, 
+    test19seg<-GetClassPoints(data= pseg, 
                             polygons=TrainTestPolys[["testPolys"]],
                             MaxPointsPerPolygonClass=c("water"=20, "turf"=20, "Other"=20), 
                             StratifyingCellSize=0.1)
 
-    TestTrain<-list("train15"=train15,
-                    "test15"=test15,
-                    "train15seg"=train15seg,
-                    "test15seg"= test15seg)
+    TestTrain<-list("train19"=train19,
+                    "test19"=test19,
+                    "train19seg"=train19seg,
+                    "test19seg"= test19seg)
 
 #5. Save output
 
@@ -72,4 +72,4 @@
     #save rds for next steps
         saveRDS(TestTrain, file.path("Outputs", "TestTrainPoints.RDS"))
     #save renamed polygons for next steps
-        saveRDS(tv_polygons, file.path("Outputs", "reference_data_2015_renamed.RDS"))
+        saveRDS(tv_polygons, file.path("Outputs", "reference_data_2019_renamed.RDS"))

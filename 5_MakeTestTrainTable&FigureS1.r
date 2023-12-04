@@ -39,16 +39,16 @@
         plotCols<-c("green", "grey", "red", "blue")
 
         TestTrain<-readRDS(file.path("Outputs", "TestTrainPoints.RDS"))
-        s <-  terra::rast(file.path("Outputs", "Stretched_p15.tif"))
+        s <-  terra::rast(file.path("Outputs", "Stretched.tif"))
         polys<-readRDS(file.path("Outputs", "TrainTestPolys.RDS")) %>% lapply(., terra::vect)
         polys<-rbind(polys[[1]], polys[[2]])
 # 3) make figures and tables for test train data
     #Table 2 – stats of training and test data
         testTrainStats_table<-rbind(
-                                TestTrain[["train15"]][["NumberCellsPerCategory"]],
-                                TestTrain[["test15"]][["NumberCellsPerCategory"]],
-                                TestTrain[["train15seg"]][["NumberCellsPerCategory"]],
-                                TestTrain[["test15seg"]][["NumberCellsPerCategory"]]
+                                TestTrain[["train19"]][["NumberCellsPerCategory"]],
+                                TestTrain[["test19"]][["NumberCellsPerCategory"]],
+                                TestTrain[["train19seg"]][["NumberCellsPerCategory"]],
+                                TestTrain[["test19seg"]][["NumberCellsPerCategory"]]
                             ) %>%
                             as.data.frame
 
@@ -103,7 +103,7 @@
                     cowplot::draw_plot(z4, x=0.65, y=0, width=0.25, height=0.25)+
                     cowplot::draw_plot(legend, x=0.92, y=0, width=0.05, height=1)+
                     cowplot::draw_plot_label(   label = c("A", "B", "C", "D", "E"), 
-                                            size = 15, 
+                                            size = 19, 
                                             x = c(0,0.62, 0.62, 0.62, 0.62), 
                                             y = c(1, 1, 0.75, 0.5, 0.25))
         dev.off()

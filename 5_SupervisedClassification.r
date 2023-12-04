@@ -63,11 +63,11 @@
 
     #fit random forests and classify
         #tune rfs
-            #2015
+            #2019
                 #tune rf
                     model_tuned <- randomForest::tuneRF(
-                        x=select(TestTrain[["train15"]][["pointVals"]], !c(response, ID)), #define predictor variables
-                        y=TestTrain[["train15"]][["pointVals"]]$response, #define response variable
+                        x=select(TestTrain[["train19"]][["pointVals"]], !c(response, ID)), #define predictor variables
+                        y=TestTrain[["train19"]][["pointVals"]]$response, #define response variable
                         ntreeTry=3001,
                         mtryStart=2, 
                         stepFactor=1.5,
@@ -76,44 +76,44 @@
                     )
                 #optimum mtry 
                     #5
-                #error rates stabilise by 500 trees - visible with plot(mod15)
+                #error rates stabilise by 500 trees - visible with plot(mod19)
             #segmentation
                 #tune rf
                     model_tuned <- randomForest::tuneRF(
-                        x=select(TestTrain[["train15seg"]][["pointVals"]], !c(response, ID)), #define predictor variables
-                        y=TestTrain[["train15seg"]][["pointVals"]]$response, #define response variable
+                        x=select(TestTrain[["train19seg"]][["pointVals"]], !c(response, ID)), #define predictor variables
+                        y=TestTrain[["train19seg"]][["pointVals"]]$response, #define response variable
                         ntreeTry=3001,
                         mtryStart=2, 
                         stepFactor=1.5,
                         improve=0.001,
                         trace=TRUE #don't show real-time progress
                     )
-                #optimum mtry =6 for seg
-                #error rates stabilise by 500 trees - visible with plot(mod15seg)
+                #optimum mtry =5 for seg
+                #error rates stabilise by 500 trees - visible with plot(mod19seg)
         # fit train test rfs
         set.seed(1) 
-            mod15 <- randomForest::randomForest(x=select(TestTrain[["train15"]][["pointVals"]], !c(response, ID)), 
-                                                xtest= select(TestTrain[["test15"]][["pointVals"]], !c(response, ID)) , 
-                                                y=TestTrain[["train15"]][["pointVals"]]$response, 
-                                                ytest= TestTrain[["test15"]][["pointVals"]]$response , 
+            mod19 <- randomForest::randomForest(x=select(TestTrain[["train19"]][["pointVals"]], !c(response, ID)), 
+                                                xtest= select(TestTrain[["test19"]][["pointVals"]], !c(response, ID)) , 
+                                                y=TestTrain[["train19"]][["pointVals"]]$response, 
+                                                ytest= TestTrain[["test19"]][["pointVals"]]$response , 
                                                 na.action=na.omit, 
                                                 ntree=3001, 
-                                                mtry=5, 
+                                                mtry=2, 
                                                 confusion=TRUE)
                 
-            mod15seg <- randomForest::randomForest(x=select(TestTrain[["train15seg"]][["pointVals"]], !c(response, ID)), 
-                                                xtest= select(TestTrain[["test15seg"]][["pointVals"]], !c(response, ID)) , 
-                                                y=TestTrain[["train15seg"]][["pointVals"]]$response, 
-                                                ytest= TestTrain[["test15seg"]][["pointVals"]]$response , 
+            mod19seg <- randomForest::randomForest(x=select(TestTrain[["train19seg"]][["pointVals"]], !c(response, ID)), 
+                                                xtest= select(TestTrain[["test19seg"]][["pointVals"]], !c(response, ID)) , 
+                                                y=TestTrain[["train19seg"]][["pointVals"]]$response, 
+                                                ytest= TestTrain[["test19seg"]][["pointVals"]]$response , 
                                                 na.action=na.omit, 
                                                 ntree=3001, 
-                                                mtry=6, 
+                                                mtry=2, 
                                                 confusion=TRUE)
 
         #save table 3
-            MakeConfusionTable(mod15[["test"]][["confusion"]]) %>%
+            MakeConfusionTable(mod19[["test"]][["confusion"]]) %>%
                 write.csv("Figures/Table3a.csv")    
-            MakeConfusionTable(mod15seg[["test"]][["confusion"]]) %>%
+            MakeConfusionTable(mod19seg[["test"]][["confusion"]]) %>%
                 write.csv("Figures/Table3b.csv")    
 
         #get F1 stats
@@ -122,35 +122,35 @@
             }
 
             #green
-            GetF1(mod15, 1)
-            GetF1(mod15seg, 1)
+            GetF1(mod19, 1)
+            GetF1(mod19seg, 1)
             #urban
-            GetF1(mod15, 2)
-            GetF1(mod15seg, 2)
+            GetF1(mod19, 2)
+            GetF1(mod19seg, 2)
             #turf
-            GetF1(mod15, 3)
-            GetF1(mod15seg, 3)
+            GetF1(mod19, 3)
+            GetF1(mod19seg, 3)
             #water
-            GetF1(mod15, 4)
-            GetF1(mod15seg, 4)
+            GetF1(mod19, 4)
+            GetF1(mod19seg, 4)
 
 
 # 4. make land cover maps
     set.seed(1) 
-    mod15 <- randomForest::randomForest(response ~ ., data=select(TestTrain[["train15"]][["pointVals"]], !ID), na.action=na.omit, ntree=3001, mtry=5, confusion=TRUE)
-    sc15 <- terra::predict(object=p, 
-                            model=mod15, 
+    mod19 <- randomForest::randomForest(response ~ ., data=select(TestTrain[["train19"]][["pointVals"]], !ID), na.action=na.omit, ntree=3001, mtry=2, confusion=TRUE)
+    sc19 <- terra::predict(object=p, 
+                            model=mod19, 
                             type="response",
-                            filename=file.path("Outputs", "landcover_15.tif"), 
+                            filename=file.path("Outputs", "landcover_19.tif"), 
                             format="GTiff", 
                             datatype="INT1U",
                             overwrite=TRUE)
     set.seed(1) 
-    mod15seg <- randomForest::randomForest(response ~ ., data=select(TestTrain[["train15seg"]][["pointVals"]], !ID), na.action=na.omit, ntree=3001, mtry=6, confusion=TRUE)
-    sc15seg <- terra::predict(object=pseg, 
-                            model=mod15seg, 
+    mod19seg <- randomForest::randomForest(response ~ ., data=select(TestTrain[["train19seg"]][["pointVals"]], !ID), na.action=na.omit, ntree=3001, mtry=2, confusion=TRUE)
+    sc19seg <- terra::predict(object=pseg, 
+                            model=mod19seg, 
                             type="response",
-                            filename=file.path("Outputs", "landcover_15seg.tif"), 
+                            filename=file.path("Outputs", "landcover_19seg.tif"), 
                             format="GTiff", 
                             datatype="INT1U",
                             overwrite=TRUE)
@@ -158,5 +158,5 @@
 
 # 5. save outputs
     #saving random forest models - (classification rasters written to file by functions)
-        saveRDS(mod15, file.path("Outputs", paste0(TrainingClassId,"RandomForestModel_15")))
-        saveRDS(mod15seg, file.path("Outputs", paste0(TrainingClassId,"RandomForestModel_15seg")))
+        saveRDS(mod19, file.path("Outputs", paste0(TrainingClassId,"RandomForestModel_19")))
+        saveRDS(mod19seg, file.path("Outputs", paste0(TrainingClassId,"RandomForestModel_19seg")))
