@@ -23,7 +23,7 @@
 
     # Load training and validation polygons #
     # And setting coordinate reference system to match imagery
-        tv_polygons<-LoadTestTrainData(TestTrain="reference_data_2019_improved_water_poly_split", pleiades=p)
+        tv_polygons<-LoadTestTrainData(TestTrain="reference_data_2019_improved_water_poly_split_no_fields", pleiades=p)
 
     # adjust mislabelled classes to match ids (there are currently two artifical classes with typo names "man" and "man-made")
         NewClassNames<-tv_polygons$id %>%

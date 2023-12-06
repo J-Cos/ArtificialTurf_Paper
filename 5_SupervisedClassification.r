@@ -75,7 +75,7 @@
                         trace=TRUE #don't show real-time progress
                     )
                 #optimum mtry 
-                    #5
+                    #2
                 #error rates stabilise by 500 trees - visible with plot(mod19)
             #segmentation
                 #tune rf
@@ -146,7 +146,7 @@
                             datatype="INT1U",
                             overwrite=TRUE)
     set.seed(1) 
-    mod19seg <- randomForest::randomForest(response ~ ., data=select(TestTrain[["train19seg"]][["pointVals"]], !ID), na.action=na.omit, ntree=3001, mtry=2, confusion=TRUE)
+    mod19seg <- randomForest::randomForest(response ~ ., data=select(TestTrain[["train19seg"]][["pointVals"]], !ID), na.action=na.omit, ntree=3001, mtry=5, confusion=TRUE)
     sc19seg <- terra::predict(object=pseg, 
                             model=mod19seg, 
                             type="response",
