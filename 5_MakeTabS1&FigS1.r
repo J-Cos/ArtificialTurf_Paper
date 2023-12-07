@@ -63,7 +63,7 @@
         testTrainStats_table$Total<- rowSums(testTrainStats_table)        
 
         #save
-        write.csv(testTrainStats_table, "Figures/Table2.csv")
+        write.csv(testTrainStats_table, "Figures/TableS1.csv")
 
     #supp fig 1 – zoomed in classes and locations of points
 
@@ -94,7 +94,7 @@
 
 
     #save polygon images for heuristic checks
-        png(file.path("Figures","SupplementaryFigure1.png"), height = 8.3, width = 13, units = 'in', res = 200)
+        png(file.path("Figures","FigS1.png"), height = 8.3, width = 13, units = 'in', res = 200)
                 cowplot::ggdraw() +
                     cowplot::draw_plot(p, x=0, y=0, width=0.65, height=1)+
                     cowplot::draw_plot(z1, x=0.65, y=0.75, width=0.25, height=0.25)+

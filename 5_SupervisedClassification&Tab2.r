@@ -112,9 +112,9 @@
 
         #save table 3
             MakeConfusionTable(mod19[["test"]][["confusion"]]) %>%
-                write.csv("Figures/Table3a.csv")    
+                write.csv("Figures/Table2a.csv")    
             MakeConfusionTable(mod19seg[["test"]][["confusion"]]) %>%
-                write.csv("Figures/Table3b.csv")    
+                write.csv("Figures/Table2b.csv")    
 
         #get F1 stats
             GetF1<-function(mod, var){

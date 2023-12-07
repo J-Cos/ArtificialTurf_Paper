@@ -37,7 +37,7 @@
     
     names(tab)<-c("Class", "Percentage of area (pixel-based)", "Percentage of area (object-based)")
 
-    write.csv(tab, "Figures/SupplementaryTable1.csv")
+    write.csv(tab, "Figures/TableS2.csv")
 
 # 4. Make plots with some zoomed areas
     #get zoomed areas

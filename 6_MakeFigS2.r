@@ -84,23 +84,16 @@ MakeTurfClassificationPlot<-function(Turf_df) {
             filter(TV=="Validation turf polygons") 
         cor.test(dat$total, dat$prop, method="spearman")
 
-        dat %>%
-            mutate(size=total>10) %>%
-            kruskal.test(prop~size, .)
-
         datseg<-Turfseg_df %>%
             filter(cat=="Artificial Turf") %>%
             filter(TV=="Validation turf polygons")  
         cor.test(datseg$total, datseg$prop, method="spearman")
-        datseg %>%
-            mutate(size=total>10) %>%
-            kruskal.test(prop~size, .)
 
     #make fig
         pb_plot<-MakeTurfClassificationPlot(Turf_df)
         ob_plot<-MakeTurfClassificationPlot(Turfseg_df)
 
-    pdf(file.path("Figures",paste0("Figure3.pdf")), height = 6, width = 12)
+    pdf(file.path("Figures",paste0("FigS2.pdf")), height = 6, width = 12)
         cowplot::ggdraw() +
             cowplot::draw_plot(pb_plot, x=0, y=0.5, width=1, height=0.5)+
             cowplot::draw_plot(ob_plot, x=0, y=0, width=1, height=0.5)+
